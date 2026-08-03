@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="Illustration of Talaviya Sarthak, an AI/ML engineer">
+  <defs>
+    <linearGradient id="ringMetal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#d9a441"/>
+      <stop offset="0.5" stop-color="#b4760b"/>
+      <stop offset="1" stop-color="#8a5a10"/>
+    </linearGradient>
+    <linearGradient id="plate" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fdfaf3"/>
+      <stop offset="1" stop-color="#f1e6cf"/>
+    </linearGradient>
+    <linearGradient id="skin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f2c9a6"/>
+      <stop offset="1" stop-color="#e6b085"/>
+    </linearGradient>
+    <linearGradient id="sweater" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#b08d57"/>
+      <stop offset="1" stop-color="#96763f"/>
+    </linearGradient>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#6b4a12" flood-opacity="0.28"/>
+    </filter>
+    <filter id="innerHighlight">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#fff" flood-opacity="0.55"/>
+      <feComposite in2="blur" operator="in"/>
+      <feComposite in2="SourceAlpha" operator="out"/>
+      <feOffset dx="0" dy="-2"/>
+    </filter>
+  </defs>
+
+  <ellipse cx="200" cy="392" rx="150" ry="10" fill="#6b4a12" opacity="0.18"/>
+
+  <g filter="url(#softShadow)">
+    <circle cx="200" cy="200" r="182" fill="url(#ringMetal)"/>
+    <circle cx="200" cy="200" r="172" fill="url(#ringMetal)"/>
+  </g>
+
+  <circle cx="200" cy="200" r="164" fill="url(#plate)"/>
+  <circle cx="200" cy="200" r="164" fill="none" stroke="#ffffff" stroke-opacity="0.55" stroke-width="3"/>
+  <circle cx="200" cy="200" r="150" fill="#f8efdd"/>
+
+  <path d="M92 208 Q100 320 200 322 Q300 320 308 208 Q300 262 260 280 Q234 248 200 246 Q166 248 140 280 Q100 262 92 208 Z" fill="url(#sweater)"/>
+  <path d="M164 300 q36 22 72 0 l0 24 q-36 24 -72 0 Z" fill="#a9884e" opacity="0.85"/>
+  <path d="M140 280 q60 44 120 0 l-10 20 q-50 40 -100 0 Z" fill="#fdfaf3" opacity="0.35"/>
+
+  <rect x="162" y="222" width="76" height="46" rx="23" fill="url(#skin)"/>
+  <rect x="158" y="196" width="84" height="34" rx="17" fill="#3a2c22"/>
+  <path d="M158 212 q42 26 84 0 q-2 18 -12 26 q-30 18 -60 0 q-10 -8 -12 -26 Z" fill="#2c211a"/>
+  <path d="M196 224 q4 -6 8 0" stroke="#b98a5f" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+
+  <g fill="none" stroke="#4a3f30" stroke-width="4.4" stroke-linecap="round">
+    <line x1="120" y1="248" x2="150" y2="244"/>
+    <line x1="280" y1="248" x2="250" y2="244"/>
+    <circle cx="142" cy="256" r="18"/>
+    <circle cx="258" cy="256" r="18"/>
+  </g>
+  <line x1="160" y1="256" x2="240" y2="256" stroke="#4a3f30" stroke-width="4" stroke-linecap="round"/>
+
+  <g opacity="0.85">
+    <circle cx="64" cy="92" r="6" fill="#d9a441"/>
+    <circle cx="340" cy="76" r="4" fill="#b4760b"/>
+    <circle cx="352" cy="128" r="7" fill="#d9a441"/>
+    <circle cx="52" cy="150" r="4" fill="#b4760b"/>
+    <circle cx="96" cy="322" r="5" fill="#d9a441"/>
+    <circle cx="318" cy="330" r="5" fill="#d9a441"/>
+  </g>
+
+  <path d="M38 200 Q200 34 362 200" fill="none" stroke="#ffffff" stroke-opacity="0.5" stroke-width="5" stroke-linecap="round"/>
+</svg>

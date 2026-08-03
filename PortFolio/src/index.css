@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+@theme {
+  /* Brand palette — warm, light, neutral */
+  --color-cream: #f7f3ec;
+  --color-parchment: #fdfbf6;
+  --color-surface: #fbf8f1;
+  --color-ink: #2b2318;
+  --color-ink-soft: #4a3f30;
+  --color-muted: #85795f;
+  --color-line: #e9e1d1;
+  --color-line-strong: #ddd2bd;
+  --color-bronze: #a16207;
+  --color-bronze-deep: #854d0e;
+  --color-bronze-soft: #f5e9d4;
+  --color-tick: #2f7d4f;
+
+  /* Typography */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Poppins", "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* Skeuomorphic depth — layered soft shadows */
+  --shadow-soft: 0 1px 2px rgb(60 45 20 / 0.06), 0 2px 6px rgb(60 45 20 / 0.05);
+  --shadow-raised: 0 1px 1px rgb(255 255 255 / 0.9) inset,
+    0 10px 24px -10px rgb(60 45 20 / 0.18);
+  --shadow-card: 0 1px 2px rgb(60 45 20 / 0.06), 0 12px 28px -12px rgb(60 45 20 / 0.16),
+    0 1px 0 rgb(255 255 255 / 0.8) inset;
+  --shadow-pressed: 0 1px 2px rgb(60 45 20 / 0.08) inset,
+    0 2px 4px rgb(60 45 20 / 0.06);
+  --shadow-well: inset 0 2px 6px rgb(60 45 20 / 0.12), inset 0 1px 2px rgb(60 45 20 / 0.1);
+  --shadow-hover: 0 1px 1px rgb(255 255 255 / 0.9) inset,
+    0 18px 40px -16px rgb(60 45 20 / 0.28);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--color-bronze-soft);
+    color: var(--color-bronze-deep);
+  }
+}
+
+@layer components {
+  /* Tactile raised surface — the signature skeuomorphic card */
+  .surface {
+    background: var(--color-parchment);
+    border: 1px solid var(--color-line);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-soft);
+  }
+
+  .surface-raised {
+    background: var(--color-parchment);
+    border: 1px solid var(--color-line);
+    border-radius: 1.25rem;
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Sunken inset wells (photo frames, code, input fields) */
+  .well {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line-strong);
+    border-radius: 0.875rem;
+    box-shadow: var(--shadow-well);
+  }
+
+  /* Primary tactile button */
+  .btn-primary {
+    background: linear-gradient(180deg, #c07d12, #a16207 55%, #92570a);
+    border: 1px solid #854d0e;
+    box-shadow: var(--shadow-raised), inset 0 -2px 3px rgb(84 45 6 / 0.45);
+    color: #fff;
+  }
+  .btn-primary:hover {
+    filter: brightness(1.06);
+  }
+  .btn-primary:active {
+    box-shadow: var(--shadow-pressed), inset 0 2px 4px rgb(84 45 6 / 0.4);
+    transform: translateY(1px);
+  }
+
+  /* Secondary tactile button */
+  .btn-secondary {
+    background: linear-gradient(180deg, #fffdf8, #f3ecdc);
+    border: 1px solid var(--color-line-strong);
+    box-shadow: var(--shadow-raised);
+    color: var(--color-ink-soft);
+  }
+  .btn-secondary:hover {
+    border-color: #cfc2a6;
+    color: var(--color-ink);
+  }
+  .btn-secondary:active {
+    box-shadow: var(--shadow-pressed);
+    transform: translateY(1px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
