@@ -89,19 +89,7 @@ const Sidebar = ({ open, onClose }) => (
       </nav>
 
       {/* Leather patch widget */}
-      <div className="p-4">
-        <div className={cn(leatherPatch, 'p-4')}>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-paper-300/40">
-            Workspace
-          </p>
-          <p className="mt-1.5 text-sm font-semibold text-paper-100">
-            Product Team
-          </p>
-          <p className="mt-1 text-xs leading-relaxed text-paper-300/60">
-            Shared board · 4 active members
-          </p>
-        </div>
-      </div>
+    
     </aside>
   </>
 );

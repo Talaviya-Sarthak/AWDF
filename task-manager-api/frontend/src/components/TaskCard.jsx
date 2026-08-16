@@ -19,9 +19,6 @@ import {
   accentLow,
 } from '../styles/classes.js';
 
-/**
- * Metadata maps — single source of truth for labels and styling.
- */
 const STATUS_META = {
   pending: { label: 'Pending', badge: badgeYellow, dot: 'bg-status-yellow' },
   in_progress: { label: 'In Progress', badge: badgeBlue, dot: 'bg-status-blue' },
@@ -34,7 +31,6 @@ const PRIORITY_META = {
   low: { label: 'Low', badge: badgeGreen, accent: accentLow },
 };
 
-/** True when the due date has passed and the task is not completed. */
 const isOverdue = (task) => {
   if (task.status === 'completed' || !task.dueDate) return false;
   const due = new Date(`${task.dueDate}T00:00:00`);
@@ -43,12 +39,6 @@ const isOverdue = (task) => {
   return !Number.isNaN(due.getTime()) && due < today;
 };
 
-/**
- * Notebook-inspired task card with a colored priority spine and a gloss
- * sweep. Layout keeps every card in a row the same height: title +
- * description are clamped, the description grows (`flex-1`) and the footer
- * is pinned to the bottom.
- */
 const TaskCard = ({ task, onEdit, onDelete }) => {
   const status = STATUS_META[task.status] || STATUS_META.pending;
   const priority = PRIORITY_META[task.priority] || PRIORITY_META.medium;

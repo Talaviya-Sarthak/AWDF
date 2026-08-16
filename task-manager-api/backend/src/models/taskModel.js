@@ -1,78 +1,54 @@
+import Task from './Task.js';
 import { tasks as seedTasks } from '../data/tasks.js';
 
 /**
  * TaskModel — data access layer (repository).
  *
- * The model is the ONLY module allowed to touch the data source. Today it
- * reads the static file `src/data/tasks.js` and keeps state in memory.
+ * The model is the ONLY module allowed to touch the data source. Previously
+ * it kept state in the in-memory `src/data/tasks.js` array; it now delegates
+ * every operation to the Mongoose `Task` model backed by MongoDB, so data
+ * persists across server restarts.
  *
- * To migrate to a real database later, only this class needs to change:
- *   - getAll()   -> SELECT / find()
- *   - getById()  -> SELECT WHERE id = ?  / findById()
- *   - create()   -> INSERT / insertOne()
- *   - update()   -> UPDATE / findByIdAndUpdate()
- *   - delete()   -> DELETE / findByIdAndDelete()
- *
- * Nothing above this layer (services, controllers, routes, frontend)
- * has to be modified.
+ * The public method signatures are unchanged (getAll / getById / create /
+ * update / delete), so nothing above this layer had to be restructured —
+ * only the call sites became async because Mongoose queries are promises.
  */
-class TaskModel {
-  constructor() {
-    // Work on a copy so the seed module is never mutated.
-    this._tasks = seedTasks.map((task) => ({ ...task }));
-  }
+const taskModel = {
+  /** Returns every task in the `tasks` collection. */
+  getAll: () => Task.find(),
 
-  /** Returns a shallow copy of every task. */
-  getAll() {
-    return this._tasks.map((task) => ({ ...task }));
-  }
+  /** Returns a single task by ObjectId, or null when it does not exist. */
+  getById: (id) => Task.findById(id),
 
-  /** Returns a copy of a single task or null when it does not exist. */
-  getById(id) {
-    const task = this._tasks.find((item) => item.id === id);
-    return task ? { ...task } : null;
-  }
+  /** Creates and persists a new task. */
+  create: (payload) => Task.create(payload),
 
-  /** Persists a new task and returns the created entity. */
-  create(payload) {
-    const task = {
-      id: this._getNextId(),
-      ...payload,
-      createdAt: new Date().toISOString(),
-    };
-    this._tasks.push(task);
-    return { ...task };
-  }
+  /**
+   * Merges partial updates into an existing task. `runValidators` makes
+   * sure schema validation (required / enum) runs during updates.
+   */
+  update: (id, payload) =>
+    Task.findByIdAndUpdate(id, payload, { new: true, runValidators: true }),
 
-  /** Merges partial updates into an existing task, or returns null. */
-  update(id, payload) {
-    const index = this._tasks.findIndex((item) => item.id === id);
-    if (index === -1) {
-      return null;
+  /** Removes a task. Returns the deleted doc, or null when missing. */
+  delete: (id) => Task.findByIdAndDelete(id),
+
+  /**
+   * Seeds the seed tasks from `src/data/tasks.js` into MongoDB, but only
+   * when the collection is empty — preserves the Practical 4 seed data
+   * without ever duplicating user-created tasks.
+   */
+  seedIfEmpty: async () => {
+    const count = await Task.countDocuments();
+    if (count > 0) {
+      return;
     }
-    this._tasks[index] = { ...this._tasks[index], ...payload };
-    return { ...this._tasks[index] };
-  }
+    // Drop the numeric `id` — MongoDB generates its own ObjectId.
+    const docs = seedTasks.map(({ id, ...task }) => ({ ...task }));
+    await Task.insertMany(docs);
+    // eslint-disable-next-line no-console
+    console.log(`Seeded ${docs.length} tasks into MongoDB`);
+  },
+};
 
-  /** Removes a task. Returns true when deleted, false when missing. */
-  delete(id) {
-    const index = this._tasks.findIndex((item) => item.id === id);
-    if (index === -1) {
-      return false;
-    }
-    this._tasks.splice(index, 1);
-    return true;
-  }
-
-  /** Simple auto-increment style id generator (seed ids start at 1001). */
-  _getNextId() {
-    const maxId = this._tasks.reduce(
-      (max, task) => Math.max(max, task.id),
-      1000
-    );
-    return maxId + 1;
-  }
-}
-
-// Export a single shared instance (acts like a connection/session object).
-export default new TaskModel();
+export default taskModel;
