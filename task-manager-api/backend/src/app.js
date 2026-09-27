@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import env from './config/env.js';
 import taskRoutes from './routes/taskRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 import logger from './middleware/logger.js';
 import errorHandler from './middleware/errorHandler.js';
 import { sendSuccess, sendError } from './utils/response.js';
@@ -12,7 +13,7 @@ import { sendSuccess, sendError } from './utils/response.js';
  * Middleware order matters:
  *   1. CORS + JSON body parsing
  *   2. Global request logger
- *   3. Feature routes
+ *   3. Feature routes (auth first, then tasks)
  *   4. 404 handler (catches unknown routes)
  *   5. Global error handler (ALWAYS last)
  */
@@ -28,6 +29,7 @@ app.get('/api/health', (req, res) =>
 );
 
 // Feature routes.
+app.use('/api/auth', authRoutes);
 app.use('/api/tasks', taskRoutes);
 
 // 404 handler for unknown routes.

@@ -7,13 +7,6 @@ import {
 } from '../services/taskService.js';
 import { sendSuccess } from '../utils/response.js';
 
-/**
- * TaskController — HTTP layer.
- *
- * Controllers translate HTTP requests into service calls and shape the
- * response. They contain no business rules and no data-access code.
- */
-
 /** GET /api/tasks */
 export const getTasks = async (req, res, next) => {
   try {

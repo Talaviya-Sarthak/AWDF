@@ -54,9 +54,15 @@ const useTasks = () => {
       setTasks((prev) => [created, ...prev]);
       return created;
     }
-    const response = await taskApi.create(payload);
-    setTasks((prev) => [response.data.data, ...prev]);
-    return response.data.data;
+    const newTask = { id: Date.now(), ...payload, createdAt: new Date().toISOString() };
+    setTasks((prev) => [newTask, ...prev]);
+    try {
+      const response = await taskApi.create(payload);
+      return response.data.data;
+    } catch (error) {
+      setTasks((prev) => prev.filter((task) => task.id !== newTask.id));
+      throw error;
+    }
   };
 
   const updateTask = async (id, payload) => {

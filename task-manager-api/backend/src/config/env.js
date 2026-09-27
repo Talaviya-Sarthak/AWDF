@@ -13,6 +13,7 @@ const env = {
   clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
   mongoUri:
     process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/task_manager',
+  jwtSecret: process.env.JWT_SECRET,
 };
 
 export default env;

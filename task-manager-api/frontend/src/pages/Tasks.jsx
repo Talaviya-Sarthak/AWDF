@@ -9,6 +9,7 @@ import Modal from '../components/Modal.jsx';
 import EmptyState from '../components/EmptyState.jsx';
 import Select from '../components/Select.jsx';
 import { cn, paperCard, inputInset, btnPrimary } from '../styles/classes.js';
+import ToastContainer from '../components/Toast.jsx';
 
 /** Filter options rendered as inset selects. */
 const STATUS_FILTERS = [
@@ -180,6 +181,8 @@ const Tasks = () => {
   const { tasks, loading, createTask, updateTask, deleteTask } = useTasks();
   const location = useLocation();
   const navigate = useNavigate();
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastType, setToastType] = useState('success');
 
   // Search + filters
   const [query, setQuery] = useState('');
@@ -261,7 +264,7 @@ const Tasks = () => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (event) => {
+const handleSubmit = async (event) => {
     event.preventDefault();
     setSubmitting(true);
     setFormError('');
@@ -272,9 +275,12 @@ const Tasks = () => {
       } else {
         await createTask(form);
       }
+      setToastMessage('Task saved successfully');
+      setToastType('success');
       setModalOpen(false);
     } catch (error) {
-      setFormError(error.response?.data?.message || 'Something went wrong');
+      setToastMessage(error.response?.data?.message || 'Something went wrong');
+      setToastType('error');
     } finally {
       setSubmitting(false);
     }
@@ -286,9 +292,12 @@ const Tasks = () => {
 
     try {
       await deleteTask(deleteTarget.id);
+      setToastMessage('Task deleted successfully');
+      setToastType('success');
       setDeleteTarget(null);
     } catch (error) {
-      window.alert(error.response?.data?.message || 'Failed to delete task');
+      setToastMessage(error.response?.data?.message || 'Failed to delete task');
+      setToastType('error');
     } finally {
       setDeleting(false);
     }
@@ -398,24 +407,7 @@ const Tasks = () => {
         New Task
       </button>
 
-      {/* Modals */}
-      <TaskFormModal
-        open={modalOpen}
-        editingTask={editingTask}
-        form={form}
-        onChange={handleFormChange}
-        onSubmit={handleSubmit}
-        onClose={closeModal}
-        submitting={submitting}
-        error={formError}
-      />
-
-      <DeleteModal
-        task={deleteTarget}
-        onConfirm={handleDeleteConfirm}
-        onClose={() => setDeleteTarget(null)}
-        submitting={deleting}
-      />
+      <ToastContainer message={toastMessage} type={toastType} />
     </div>
   );
 };
