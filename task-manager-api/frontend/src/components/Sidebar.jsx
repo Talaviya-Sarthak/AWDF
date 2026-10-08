@@ -91,7 +91,7 @@ const Sidebar = ({ open, onClose }) => (
       </nav>
 
       {/* Leather patch widget */}
-    
+
     </aside>
   </>
 );

@@ -254,6 +254,32 @@ This repository implements route-based code splitting and component lazy loading
 
 ---
 
+## 🚀 Practical 9: In-Memory Caching & Query Optimization
+
+Server-side in-memory caching implemented using `node-cache` to maximize throughput and minimize database read latency:
+
+- **All-Tasks Caching (`GET /api/tasks`):** Standard 60-second TTL. Database queries are bypassed on cache hits.
+- **Single-Task Caching (`GET /api/tasks/:id`):** Independent cache keys (`task_${id}`) for individual task documents.
+- **Write Invalidation:** Any mutation (`POST`, `PUT`, `DELETE`) automatically invalidates stale keys, ensuring zero stale data.
+- **Telemetry & Debugging:** `GET /api/tasks/cache/stats` exposes live hit/miss ratios, key counts, and request statistics.
+- **Headers:** `X-Cache: HIT` and `X-Cache: MISS` headers indicate cache status on every read.
+- **Empirical Benchmarks:** Average database read latency dropped from **5.52 ms down to 0.08 ms** (a **69x performance gain**).
+- **Detailed Report:** See [PRACTICAL_9.md](file:///d:/SEM%205/AWDF/task-manager-api/docs/PRACTICAL_9.md) for benchmark methodology, 3-sample readings, and multi-server analysis.
+
+---
+
+## ⚡ Practical 10: Asynchronous Processing with Event-Driven Architecture
+
+Decoupled background processing implemented using Node.js native `EventEmitter` without external broker dependencies:
+
+- **Decoupled Architecture:** `POST /api/tasks` returns `201 Created` immediately (11 ms), emitting `task-created` asynchronously to handle email/push notification dispatches in the background (+1,512 ms).
+- **Audit Logging:** `DELETE /api/tasks/:id` emits `task-deleted` to log an immutable security trail without slowing the client response.
+- **Process Resilience:** Global `error` event listener catches and logs background failures, preventing unhandled exception crashes.
+- **Timestamp Evidence:** Confirmed response-before-handler execution ordering using automated benchmark logs.
+- **Detailed Report:** See [PRACTICAL_10.md](file:///d:/SEM%205/AWDF/task-manager-api/docs/PRACTICAL_10.md) for architecture diagrams, non-blocking analysis, and event-loop mechanics.
+
+---
+
 ## 🛠 Tech Stack
 
 - **Frontend:** React 19 · Vite · Tailwind CSS v4 · Axios · React Icons · React Router

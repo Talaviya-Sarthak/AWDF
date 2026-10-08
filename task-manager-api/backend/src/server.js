@@ -2,6 +2,7 @@ import app from './app.js';
 import env from './config/env.js';
 import mongoose from 'mongoose';
 import taskModel from './models/taskModel.js';
+import './events/taskListeners.js';
 
 /**
  * Server entry point.

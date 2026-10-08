@@ -7,6 +7,7 @@ import {
 } from '../services/taskService.js';
 import { sendSuccess } from '../utils/response.js';
 import cache from '../utils/cache.js';
+import taskEvents from '../events/taskEvents.js';
 
 const CACHE_KEY_ALL_TASKS = 'all_tasks';
 const getTaskCacheKey = (id) => `task_${id}`;
@@ -77,7 +78,19 @@ export const createTask = async (req, res, next) => {
     // Invalidate list cache so newly created task is immediately visible
     cache.del(CACHE_KEY_ALL_TASKS);
 
-    return sendSuccess(res, 'Task created successfully', task, 201);
+    // Practical 10: Asynchronous event handling
+    const responseTimestamp = new Date().toISOString();
+    console.log(`[API] Response 201 sent at ${responseTimestamp}`);
+    sendSuccess(res, 'Task created successfully', task, 201);
+
+    // Emit event asynchronously — listeners run without delaying the response
+    taskEvents.emit('task-created', {
+      id: task._id || task.id,
+      title: task.title,
+      priority: task.priority,
+      user: req.user?.email || 'Authenticated User',
+      timestamp: responseTimestamp,
+    });
   } catch (error) {
     return next(error);
   }
@@ -105,7 +118,7 @@ export const updateTask = async (req, res, next) => {
 /**
  * DELETE /api/tasks/:id
  *
- * Deletes task from MongoDB and invalidates both all_tasks and specific task cache.
+ * Deletes task from MongoDB, invalidates cache, and emits task-deleted event.
  */
 export const deleteTask = async (req, res, next) => {
   try {
@@ -115,7 +128,16 @@ export const deleteTask = async (req, res, next) => {
     cache.del(CACHE_KEY_ALL_TASKS);
     cache.del(getTaskCacheKey(req.params.id));
 
-    return sendSuccess(res, 'Task deleted successfully');
+    // Practical 10: Asynchronous deletion event emission
+    const responseTimestamp = new Date().toISOString();
+    console.log(`[API] Response 200 sent at ${responseTimestamp}`);
+    sendSuccess(res, 'Task deleted successfully');
+
+    taskEvents.emit('task-deleted', {
+      id: req.params.id,
+      user: req.user?.email || 'Authenticated User',
+      timestamp: responseTimestamp,
+    });
   } catch (error) {
     return next(error);
   }
