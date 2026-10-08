@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FiCheckSquare, FiPlus } from 'react-icons/fi';
 import useTasks from '../hooks/useTasks.js';
@@ -246,12 +246,16 @@ const Tasks = () => {
     setModalOpen(true);
   };
 
-  const openEditModal = (task) => {
+  const openEditModal = useCallback((task) => {
     setEditingTask(task);
     setForm(toForm(task));
     setFormError('');
     setModalOpen(true);
-  };
+  }, []);
+
+  const handleDeleteTarget = useCallback((task) => {
+    setDeleteTarget(task);
+  }, []);
 
   const closeModal = () => {
     if (submitting) return;
@@ -371,7 +375,7 @@ const handleSubmit = async (event) => {
               key={task.id}
               task={task}
               onEdit={openEditModal}
-              onDelete={setDeleteTarget}
+              onDelete={handleDeleteTarget}
             />
           ))}
         </div>

@@ -241,16 +241,16 @@ To migrate to **MongoDB / PostgreSQL / MySQL**, replace the methods inside `task
 
 ---
 
-## 🔮 Future Improvements
+## ⚡ Practical 8: Performance Optimization & Lazy Loading
 
-- Persist tasks to a real database (PostgreSQL / MongoDB / MySQL).
-- Add task pagination, sorting and debounced search on the server.
-- Authentication & per-user task ownership with JWT.
-- Drag-and-drop board view (Kanban) alongside the list view.
-- Subtask support and task dependencies.
-- Due-date reminders and email notifications.
-- API rate limiting, request validation with a schema library, and automated tests.
-- Dark leather / night theme variant.
+This repository implements route-based code splitting and component lazy loading according to the Practical 8 curriculum guidelines:
+
+- **Route Code Splitting:** `React.lazy()` applied across all application routes (`Dashboard`, `Tasks`, `Projects`, `Contact`, `Login`, `Register`, `NotFound`).
+- **Suspense Boundaries:** Custom skeuomorphic `PageLoader` fallback UI with animated spinners, loading states, and status badges.
+- **Heavy Component Splitting:** On-demand lazy loading of the analytical `ProjectMetricsChart` component on the Projects page.
+- **Flicker Prevention:** `lazyWithMinDelay` utility enforcing a 300ms minimum threshold to prevent jarring spinner flashes on fast networks.
+- **Profiler Optimization:** `React.memo` and `useCallback` applied to `TaskCard` to eliminate redundant list re-renders.
+- **Detailed Report:** See [PRACTICAL_8.md](file:///d:/SEM%205/AWDF/task-manager-api/docs/PRACTICAL_8.md) for full before/after metrics, bundle comparison tables, and theoretical Q&A.
 
 ---
 

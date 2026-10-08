@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { FiGrid, FiCheckSquare, FiX } from 'react-icons/fi';
+import { FiGrid, FiCheckSquare, FiFolder, FiMail, FiX } from 'react-icons/fi';
 import {
   cn,
   leatherSidebar,
@@ -16,6 +16,8 @@ import {
 const NAV_ITEMS = [
   { to: '/', label: 'Dashboard', icon: <FiGrid />, end: true },
   { to: '/tasks', label: 'Tasks', icon: <FiCheckSquare />, end: false },
+  { to: '/projects', label: 'Projects', icon: <FiFolder />, end: false },
+  { to: '/contact', label: 'Contact', icon: <FiMail />, end: false },
 ];
 
 const navClassName = ({ isActive }) => cn(navItem, isActive && navItemActive);

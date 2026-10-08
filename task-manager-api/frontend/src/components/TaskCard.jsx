@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { FiClock, FiEdit2, FiTrash2 } from 'react-icons/fi';
 import { formatDueDate } from '../utils/format.js';
 import {
@@ -115,4 +116,4 @@ const TaskCard = ({ task, onEdit, onDelete }) => {
   );
 };
 
-export default TaskCard;
+export default memo(TaskCard);

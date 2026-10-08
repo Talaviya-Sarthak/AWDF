@@ -1,60 +1,73 @@
+import { lazy, Suspense } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import { ProtectedRoute } from './components/ProtectedRoute.jsx';
 import DashboardLayout from './layouts/DashboardLayout.jsx';
-import Dashboard from './pages/Dashboard.jsx';
-import Tasks from './pages/Tasks.jsx';
-import Login from './pages/Login.jsx';
-import Register from './pages/Register.jsx';
-import NotFound from './pages/NotFound.jsx';
+import PageLoader from './components/PageLoader.jsx';
+import { lazyWithMinDelay } from './utils/lazyWithDelay.js';
 
 /**
- * Inner routes component — separates auth logic from provider setup.
+ * Route-based Code Splitting (React.lazy + Suspense)
+ *
+ * Each route is bundled into an isolated JavaScript chunk and loaded on demand.
+ * Supplementary Problem 2: Wrapped with lazyWithMinDelay(..., 300) to ensure
+ * a smooth fallback presentation without flickering on fast connections.
+ */
+const Dashboard = lazyWithMinDelay(() => import('./pages/Dashboard.jsx'), 300);
+const Tasks = lazyWithMinDelay(() => import('./pages/Tasks.jsx'), 300);
+const Projects = lazyWithMinDelay(() => import('./pages/Projects.jsx'), 300);
+const Contact = lazyWithMinDelay(() => import('./pages/Contact.jsx'), 300);
+const Login = lazyWithMinDelay(() => import('./pages/Login.jsx'), 300);
+const Register = lazyWithMinDelay(() => import('./pages/Register.jsx'), 300);
+const NotFound = lazyWithMinDelay(() => import('./pages/NotFound.jsx'), 300);
+
+/**
+ * Inner routes component — handles authentication state and route suspense.
  */
 const AppRoutes = () => {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <div className="animate-spin rounded-full h-10 w-10 border-3 border-accent-500 border-t-transparent" />
-      </div>
-    );
+    return <PageLoader message="Authenticating session..." />;
   }
 
   return (
-    <Routes>
-      {/* Public auth routes — redirect to dashboard if already logged in */}
-      <Route
-        path="/login"
-        element={user ? <Navigate to="/" replace /> : <Login />}
-      />
-      <Route
-        path="/register"
-        element={user ? <Navigate to="/" replace /> : <Register />}
-      />
+    <Suspense fallback={<PageLoader message="Loading page module..." />}>
+      <Routes>
+        {/* Public auth routes — redirect to dashboard if already authenticated */}
+        <Route
+          path="/login"
+          element={user ? <Navigate to="/" replace /> : <Login />}
+        />
+        <Route
+          path="/register"
+          element={user ? <Navigate to="/" replace /> : <Register />}
+        />
 
-      {/* Protected routes — require authentication */}
-      <Route
-        element={
-          <ProtectedRoute>
-            <DashboardLayout />
-          </ProtectedRoute>
-        }
-      >
-        <Route index element={<Dashboard />} />
-        <Route path="tasks" element={<Tasks />} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
+        {/* Protected workspace routes */}
+        <Route
+          element={
+            <ProtectedRoute>
+              <DashboardLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="tasks" element={<Tasks />} />
+          <Route path="projects" element={<Projects />} />
+          <Route path="contact" element={<Contact />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
 
-      {/* Catch-all — redirect to login if not authenticated, else dashboard */}
-      <Route path="*" element={<Navigate to={user ? '/' : '/login'} replace />} />
-    </Routes>
+        {/* Global Catch-all */}
+        <Route path="*" element={<Navigate to={user ? '/' : '/login'} replace />} />
+      </Routes>
+    </Suspense>
   );
 };
 
 /**
- * Application root — wraps everything in AuthProvider.
+ * Application root — wraps route tree in AuthProvider.
  */
 const App = () => (
   <AuthProvider>

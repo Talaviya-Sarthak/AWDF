@@ -11,6 +11,8 @@ import { useAuth } from '../context/AuthContext.jsx';
 const PAGE_META = {
   '/': { title: 'Dashboard', subtitle: 'Your productivity overview' },
   '/tasks': { title: 'Tasks', subtitle: 'Manage and organize your work' },
+  '/projects': { title: 'Projects', subtitle: 'Workspace initiatives & roadmaps' },
+  '/contact': { title: 'Contact & Support', subtitle: 'Get in touch with our team' },
 };
 
 /**
